@@ -1,0 +1,35 @@
+# configs/config.yaml
+
+data:
+  batch_size: 32
+  num_workers: 4
+  input_size: 224
+  sample: true       
+  sample_size: 1000   # Tamaño del muestreo cuando 'sample' es True
+  augmentation:
+    use: false
+    transformations:
+      - name: "RandomHorizontalFlip"
+        params:
+          p: 0.5
+      - name: "RandomRotation"
+        params:
+          degrees: 15
+
+model:
+  name: "vit_base_patch16_224"
+  pretrained: true
+  num_classes: 7
+  architecture: "vit"
+
+training:
+  epochs: 2
+  learning_rate: 0.00005       # Equivalente a 5e-5
+  scheduler_step_size: 7
+  scheduler_gamma: 0.1
+
+logging:
+  log_file: "logs/training.log"
+
+tensorboard:
+  log_dir: "runs/ham10000_experiment"

@@ -172,3 +172,11 @@ models/*.pth
 
 # Ignorar archivos de eventos de TensorBoard
 scripts/runs/ham10000_experiment/events.out.tfevents.*
+
+# models folder
+models/
+#los logs
+logs/
+# los runs
+runs/
+

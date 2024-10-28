@@ -13,3 +13,5 @@ dict_lesiones = {
 }
 
 DATA_PATH = PROJECT_ROOT / 'data'
+CSV_PATH = DATA_PATH / 'HAM10000_metadata.csv'
+IMAGES_PATH = DATA_PATH / 'HAM10000_images'
