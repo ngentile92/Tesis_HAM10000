@@ -6,11 +6,12 @@ def get_transforms(augmentation_config, input_size):
     transform_list = [
         transforms.Resize((input_size, input_size), interpolation=transforms.InterpolationMode.BILINEAR),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],  # Valores estándar de ImageNet
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], 
                              std=[0.229, 0.224, 0.225])
     ]
     
     if augmentation_config.get('use', False):
+        print("Usando aumentaciones")
         augmentation_transforms = []
         for aug in augmentation_config.get('transformations', []):
             if aug['name'] == 'RandomHorizontalFlip':

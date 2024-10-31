@@ -2,3 +2,5 @@ pandas
 pillow
 matplotlib
 seaborn
+pyyaml
+optuna
