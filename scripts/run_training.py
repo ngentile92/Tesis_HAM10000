@@ -199,15 +199,23 @@ def main():
         logging.info(f"Hyperparameter optimization completed. Best params: {best_params} with validation accuracy {best_acc:.4f}")
         print(f"Best hyperparameters: {best_params} with validation accuracy: {best_acc:.4f}")
 
-        # Crear el modelo usando los mejores parámetros y los valores constantes de `config`
+        # Crear el modelo usando los mejores parámetros junto con otros valores constantes
         model = create_model(
-            model_name=config['model']['name'],  # Usar `config` como respaldo
-            pretrained=config['model']['pretrained'],
+            model_name=config['model']['name'],  # Tomado directamente de config
+            pretrained=config['model']['pretrained'],  # Tomado directamente de config
             num_classes=num_classes
         )
         model.to(device)
+
+        # Aplicar el mejor `learning_rate` en el optimizador
         optimizer = optim.AdamW(model.parameters(), lr=best_params['learning_rate'])
+
+        # Aplicar el mejor `scheduler_gamma` en el `scheduler`
         scheduler = lr_scheduler.StepLR(optimizer, step_size=config['training']['scheduler_step_size'], gamma=best_params['scheduler_gamma'])
+
+        # Actualizar los DataLoaders con el mejor `batch_size`
+        dataloaders['train'] = DataLoader(dataloaders['train'].dataset, batch_size=best_params['batch_size'], shuffle=True, num_workers=config['data']['num_workers'])
+        dataloaders['val'] = DataLoader(dataloaders['val'].dataset, batch_size=best_params['batch_size'], shuffle=False, num_workers=config['data']['num_workers'])
 
     else:
         logging.info("Training with configuration parameters from config.")
