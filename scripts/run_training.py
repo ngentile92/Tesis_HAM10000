@@ -14,7 +14,7 @@ from fit.train import train_model
 from fit.evaluate import evaluate_model
 
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 import torch
@@ -24,9 +24,6 @@ from torch.optim import lr_scheduler
 from torch.utils.tensorboard import SummaryWriter
 import numpy as np  # Importar numpy para el muestreo
 from itertools import product
-
-
-
 
 def optimize_hyperparameters(config, dataloaders, dataset_sizes, criterion, device, writer):
     # Definir el espacio de hiperparámetros a explorar
@@ -122,6 +119,18 @@ def main():
     df = pd.read_csv(CSV_PATH)
     df['image_path'] = df['image_id'].apply(lambda x: os.path.join(IMAGES_PATH, f"{x}.jpg"))
     df = df[df['image_path'].apply(os.path.isfile)]
+    # Apply preprocessing only if use_additional_features is set to True
+    if config['data'].get('use_additional_features', False):
+        # Standardize age
+        scaler = StandardScaler()
+        df['age'] = scaler.fit_transform(df[['age']].fillna(df['age'].mean()))  # Fill missing ages with mean
+
+        # Encode categorical variables
+        le_sex = LabelEncoder()
+        df['sex'] = le_sex.fit_transform(df['sex'].fillna('unknown'))
+
+        le_localization = LabelEncoder()
+        df['localization'] = le_localization.fit_transform(df['localization'].fillna('unknown'))
 
     logging.info(f"Total valid samples after filtering: {len(df)}")
     print(f"Total valid samples: {len(df)}")

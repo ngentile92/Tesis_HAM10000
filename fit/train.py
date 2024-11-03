@@ -32,7 +32,17 @@ def train_model(model, dataloaders, dataset_sizes, criterion, optimizer, schedul
 
             # Iterar sobre los datos
             for inputs, labels in dataloader:
-                inputs = inputs.to(device, non_blocking=True)
+                # Si los inputs son una tupla (imagen y características adicionales)
+                if isinstance(inputs, tuple):
+                    image, age, sex, localization = inputs
+                    image = image.to(device, non_blocking=True)
+                    age = age.to(device, non_blocking=True)
+                    sex = sex.to(device, non_blocking=True)
+                    localization = localization.to(device, non_blocking=True)
+                else:
+                    # En caso de que solo se utilicen imágenes
+                    image = inputs.to(device, non_blocking=True)
+
                 labels = labels.to(device, non_blocking=True)
 
                 # Zero the parameter gradients
@@ -40,7 +50,17 @@ def train_model(model, dataloaders, dataset_sizes, criterion, optimizer, schedul
 
                 # Forward
                 with torch.set_grad_enabled(phase == 'train'):
-                    outputs = model(inputs)
+                    outputs = model(image)
+                    
+                    # Si el modelo tiene la capa adicional para características extra, procesa las características
+                    if hasattr(model, 'additional_fc') and isinstance(inputs, tuple):
+                        # Combina las características adicionales en un solo tensor y pásalo por `additional_fc`
+                        additional_features = torch.cat([age.unsqueeze(1), sex.unsqueeze(1), localization.unsqueeze(1)], dim=1)
+                        additional_out = model.additional_fc(additional_features)
+
+                        # Concatenar las salidas de la imagen y las características adicionales antes de la capa final
+                        outputs = torch.cat([outputs, additional_out], dim=1)
+
                     _, preds = torch.max(outputs, 1)
                     loss = criterion(outputs, labels)
 
@@ -50,7 +70,7 @@ def train_model(model, dataloaders, dataset_sizes, criterion, optimizer, schedul
                         optimizer.step()
 
                 # Estadísticas
-                running_loss += loss.item() * inputs.size(0)
+                running_loss += loss.item() * image.size(0)
                 running_corrects += torch.sum(preds == labels.data)
 
             if phase == 'train':

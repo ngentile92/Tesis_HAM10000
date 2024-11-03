@@ -169,6 +169,8 @@ cython_debug/
 # Ignorar archivos de modelos grandes
 classes/*.pth
 models/*.pth
+*.pth
+scripts/models/*.pth
 
 # Ignorar archivos de eventos de TensorBoard
 scripts/runs/ham10000_experiment/events.out.tfevents.*

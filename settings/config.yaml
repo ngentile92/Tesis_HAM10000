@@ -1,11 +1,14 @@
 # configs/config.yaml
+#Best hyperparameters: {'learning_rate': 1e-06, 'batch_size': 16, 'scheduler_gamma': 0.6} with validation accuracy: 0.7920
 
 data:
+  use_additional_features: true  # Activa/desactiva el uso de características adicionales
+  additional_features: ["age", "sex", "localization"]
   batch_size: 32
   num_workers: 4
   input_size: 224
-  sample: true       
-  sample_size: 1000   # Tamaño del muestreo cuando 'sample' es True
+  sample: true
+  sample_size: 1000
   augmentation:
     use: false
     transformations:
@@ -16,6 +19,7 @@ data:
         params:
           degrees: 15
 
+
 model:
   name: "vit_base_patch16_224"
   pretrained: true
@@ -23,7 +27,7 @@ model:
   architecture: "vit"
 
 training:
-  epochs: 2
+  epochs: 3
   learning_rate: 0.00005       # Equivalente a 5e-5
   scheduler_step_size: 7
   scheduler_gamma: 0.1
@@ -35,7 +39,7 @@ tensorboard:
   log_dir: "runs/ham10000_experiment"
 
 hyperparameter_search:
-  use: true
+  use: false
   learning_rate_range: [0.000001, 0.001]
   batch_size_options: [16, 32, 64, 128]
   scheduler_gamma_range: [0.5, 0.99]
