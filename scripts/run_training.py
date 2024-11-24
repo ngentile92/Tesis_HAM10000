@@ -6,7 +6,7 @@ import json
 import logging
 from settings.logger import setup_logger
 from settings.config import load_config
-from settings.parameters import PROJECT_ROOT, CSV_PATH, IMAGES_PATH
+from settings.parameters import CSV_PATH, IMAGES_PATH
 from classes.dataset import HAM10000Dataset
 from classes.transforms import get_transforms
 from models.vision_transformer import create_model
