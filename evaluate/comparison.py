@@ -78,8 +78,8 @@ def plot_confusion_matrix(pretrained_results, trained_results, labels):
     trained_cm = np.array(trained_results["confusion_matrix"])
 
     fig, axes = plt.subplots(1, 2, figsize=(16, 6))
-
-    sns.heatmap(pretrained_cm, annot=True, fmt='d', cmap='Blues', ax=axes[0])
+    size_annotation = 14
+    sns.heatmap(pretrained_cm, annot=True, fmt='d', cmap='Blues', ax=axes[0], annot_kws={"size": size_annotation})
     axes[0].set_title("Matriz de Confusión - Preentrenado")
     axes[0].set_xlabel("Predicción")
     axes[0].set_ylabel("Verdadero")
@@ -88,7 +88,7 @@ def plot_confusion_matrix(pretrained_results, trained_results, labels):
     axes[0].set_xticklabels(labels)
     axes[0].set_yticklabels(labels)
 
-    sns.heatmap(trained_cm, annot=True, fmt='d', cmap='Greens', ax=axes[1])
+    sns.heatmap(trained_cm, annot=True, fmt='d', cmap='Greens', ax=axes[1], annot_kws={"size": size_annotation})
     axes[1].set_title("Matriz de Confusión - Reentrenado")
     axes[1].set_xlabel("Predicción")
     axes[1].set_ylabel("Verdadero")

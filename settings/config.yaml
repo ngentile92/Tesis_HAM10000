@@ -3,16 +3,17 @@
 ### new  Best hyperparameters: {'learning_rate': 1e-05, 'batch_size': 8, 'scheduler_gamma': 0.7} with validation accuracy: 0.8680
 # new Best hyperparameters: {'learning_rate': 1e-05, 'batch_size': 16, 'scheduler_gamma': 0.7} with validation accuracy: 0.8886
 
+
 data:
   use_additional_features: true  # Activa/desactiva el uso de características adicionales
   additional_features: ["age", "sex", "localization"]
-  batch_size: 32
+  batch_size: 16
   num_workers: 4
   input_size: 224
-  sample: true
-  sample_size: 1000
+  sample: false
+  sample_size: 7000
   augmentation:
-    use: false
+    use: true
     transformations:
       - name: "RandomHorizontalFlip"
         params:
@@ -29,10 +30,10 @@ model:
   architecture: "vit"
 
 training:
-  epochs: 3
-  learning_rate: 0.00005       # Equivalente a 5e-5
-  scheduler_step_size: 7
-  scheduler_gamma: 0.1
+  epochs: 20
+  learning_rate: 0.00001       # Equivalente a 5e-5
+  scheduler_step_size: 6
+  scheduler_gamma: 0.7
 
 logging:
   log_file: "logs/training.log"
@@ -42,8 +43,7 @@ tensorboard:
 
 hyperparameter_search:
   use: false
-  learning_rate_range: [0.000001, 0.001]
-  batch_size_options: [16, 32, 64, 128]
-  scheduler_gamma_range: [0.5, 0.99]
-  num_trials: 50  
-
+  learning_rate_range: [0.000001, 0.000005, 0.00001]
+  batch_size_options: [8, 16]
+  scheduler_gamma_range: [0.6, 0.7,0.8]
+  num_trials: 10
