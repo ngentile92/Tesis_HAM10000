@@ -42,7 +42,7 @@ tensorboard:
   log_dir: "runs/ham10000_experiment"
 
 hyperparameter_search:
-  use: false
+  use: true
   learning_rate_range: [0.000001, 0.000005, 0.00001]
   batch_size_options: [8, 16]
   scheduler_gamma_range: [0.6, 0.7,0.8]

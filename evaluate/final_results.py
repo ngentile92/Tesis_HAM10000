@@ -1,11 +1,11 @@
 import json
 import matplotlib.pyplot as plt
+import os
 from settings.parameters import PROJECT_ROOT  # Importar PROJECT_ROOT
 
 # Cargar datos del entrenamiento
-#armar con PROJECT_ROOT
-
-with open(f'{PROJECT_ROOT}/scripts/runs/ham10000_experiment/20epochs-100000-hyper/metrics-5.json', 'r') as f:
+metrics_path = os.path.join(PROJECT_ROOT, "scripts/runs/ham10000_experiment/20epochs-100000-hyper/metrics-5.json")
+with open(metrics_path, 'r') as f:
     metrics = json.load(f)
 
 epochs = metrics["epochs"]
@@ -24,8 +24,9 @@ plt.title("Evolución de la Pérdida por Épocas")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
-plt.savefig("loss_progress.png")
-print("Gráfico de pérdida guardado como 'loss_progress.png'.")
+loss_plot_path = os.path.join(os.getcwd(), "loss_progress.png")
+plt.savefig(loss_plot_path)
+print(f"Gráfico de pérdida guardado como '{loss_plot_path}'.")
 plt.show()
 
 # Gráfico de precisión
@@ -38,13 +39,14 @@ plt.title("Evolución de la Precisión por Épocas")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
-plt.savefig("accuracy_progress.png")
-print("Gráfico de precisión guardado como 'accuracy_progress.png'.")
+accuracy_plot_path = os.path.join(os.getcwd(), "accuracy_progress.png")
+plt.savefig(accuracy_plot_path)
+print(f"Gráfico de precisión guardado como '{accuracy_plot_path}'.")
 plt.show()
 
-
 # Cargar datos del reporte de clasificación
-with open(f'{PROJECT_ROOT}/scripts/runs/ham10000_experiment/20epochs-100000-hyper/classification_report_test-5.json', 'r') as f:
+classification_report_path = os.path.join(PROJECT_ROOT, "scripts/runs/ham10000_experiment/20epochs-100000-hyper/classification_report_test-5.json")
+with open(classification_report_path, 'r') as f:
     classification_report = json.load(f)
 
 labels = list(classification_report.keys())[:-3]  # Excluir métricas globales
@@ -60,6 +62,7 @@ plt.ylim(0, 1)
 for i, score in enumerate(f1_scores):
     plt.text(i, score + 0.02, f'{score:.2f}', ha='center', fontsize=10)
 plt.tight_layout()
-plt.savefig("f1_score_test.png")
-print("Gráfico de F1-score guardado como 'f1_score_test.png'.")
+f1_plot_path = os.path.join(os.getcwd(), "f1_score_test.png")
+plt.savefig(f1_plot_path)
+print(f"Gráfico de F1-score guardado como '{f1_plot_path}'.")
 plt.show()
