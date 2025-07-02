@@ -195,26 +195,26 @@ Las ejecuciones de TensorBoard se almacenan en `runs/` con subcarpetas nombradas
 
 ## 13. Glosario de Parámetros e Hiperparámetros
 
-| Nombre | Tipo | Explicación | Implicación Práctica |
-|--------|------|-------------|----------------------|
-| `patch_size` | Arquitectura | Tamaño (en píxeles) de los parches extraídos de la imagen antes de ser proyectados como tokens. | Parches más pequeños capturan detalles finos pero incrementan la secuencia de entrada y el coste computacional. |
-| `embed_dim` | Arquitectura | Dimensión del vector de embedding para cada parche/token. | Embeddings más grandes permiten representar más información pero requieren más parámetros y memoria. |
-| `depth` | Arquitectura | Número de bloques Transformer apilados. | Mayor profundidad → capacidad expresiva más alta a costa de tiempo de entrenamiento y riesgo de sobreajuste. |
-| `num_heads` | Arquitectura | Número de cabezas en la atención multi-cabeza. | Más cabezas permiten que el modelo atienda a múltiples sub-espacios, mejorando la capacidad de capturar relaciones globales. |
-| `mlp_ratio` | Arquitectura | Factor de expansión de la capa feed-forward (FFN) interna. | Aumentar el ratio amplía la capacidad no lineal del modelo, pero encarece la computación. |
-| `pretrained` | Arquitectura | Booleano que indica si se cargan pesos pre-entrenados en ImageNet-21k. | Inicializar con pesos pre-entrenados acelera la convergencia y mejora el rendimiento en datasets pequeños. |
-| `use_additional_features` | Datos/Modelo | Activa la vía adicional para `age`, `sex`, `localization`. | Permite inyectar metadatos clínicos; puede mejorar la discriminación cuando la imagen es ambigua. |
-| `learning_rate` | Entrenamiento | Tasa a la que se actualizan los pesos durante la optimización. | LR demasiado alto → divergencia; demasiado bajo → convergencia lenta o atrapada en mínimos locales. |
-| `batch_size` | Entrenamiento | Nº de muestras procesadas antes de un paso de optimización. | Batches grandes estabilizan el gradiente pero requieren más memoria; tamaños pequeños introducen ruido útil para la generalización. |
-| `epochs` | Entrenamiento | Pasadas completas por el set de entrenamiento. | Pocas épocas pueden sub-ajustar; demasiadas pueden sobre-ajustar si no hay regularización. |
-| `optimizer` (`AdamW`) | Entrenamiento | Algoritmo que actualiza los pesos combinando momentum con adaptación por dimensión y decaimiento de peso. | Maneja bien curvas de error ruidosas; el término `weight_decay` regulariza al penalizar grandes pesos. |
-| `scheduler_step_size` | Entrenamiento | Nº de épocas antes de aplicar decay al learning rate. | Controla cuán frecuentemente se reduce la LR; pasos cortos aceleran la reducción, potencialmente mejorando convergencia. |
-| `scheduler_gamma` | Entrenamiento | Factor multiplicativo aplicado a la LR cuando el scheduler se activa. | Valores <1 reducen la LR; gamma muy bajo puede congelar el entrenamiento prematuramente. |
-| `augmentation` | Pre-procesamiento | Conjunto y probabilidad de transformaciones aleatorias aplicadas a las imágenes. | Incrementa la diversidad del set de entrenamiento y reduce sobreajuste. |
-| `StandardScaler` | Pre-procesamiento | Normaliza la variable `age` a media 0 y varianza 1. | Facilita el entrenamiento de la red adicional evitando que rangos distintos dominen el aprendizaje. |
-| `LabelEncoder` | Pre-procesamiento | Convierte categorías (`sex`, `localization`, `dx`) en enteros. | Permite que los datos categóricos se integren en redes neuronales y métricas de evaluación. |
-| `StepLR` | Scheduler | Reduce la LR de forma escalonada cada `step_size` épocas. | Permite grandes pasos al inicio y finos ajustes al final, mejorando la fine-tuning. |
-| `CrossEntropyLoss` | Función de pérdida | Mide la discrepancia entre la distribución predicha y la verdadera. | Adecuada para clasificación multiclase; minimiza log-pérdida, equivalente a maximizar la probabilidad. | 
+| Nombre | Tipo | Explicación | Implicación Práctica | Valor utilizado |
+|--------|------|-------------|----------------------|-----------------|
+| `patch_size` | Arquitectura | Tamaño (en píxeles) de los parches extraídos de la imagen antes de ser proyectados como tokens. | Parches más pequeños capturan detalles finos pero incrementan la secuencia de entrada y el coste computacional. | 16 |
+| `embed_dim` | Arquitectura | Dimensión del vector de embedding para cada parche/token. | Embeddings más grandes permiten representar más información pero requieren más parámetros y memoria. | 768 |
+| `depth` | Arquitectura | Número de bloques Transformer apilados. | Mayor profundidad → capacidad expresiva más alta a costa de tiempo de entrenamiento y riesgo de sobreajuste. | 12 |
+| `num_heads` | Arquitectura | Número de cabezas en la atención multi-cabeza. | Más cabezas permiten que el modelo atienda a múltiples sub-espacios, mejorando la capacidad de capturar relaciones globales. | 12 |
+| `mlp_ratio` | Arquitectura | Factor de expansión de la capa feed-forward (FFN) interna. | Aumentar el ratio amplía la capacidad no lineal del modelo, pero encarece la computación. | 4 |
+| `pretrained` | Arquitectura | Booleano que indica si se cargan pesos pre-entrenados en ImageNet-21k. | Inicializar con pesos pre-entrenados acelera la convergencia y mejora el rendimiento en datasets pequeños. | true |
+| `use_additional_features` | Datos/Modelo | Activa la vía adicional para `age`, `sex`, `localization`. | Permite inyectar metadatos clínicos; puede mejorar la discriminación cuando la imagen es ambigua. | true |
+| `learning_rate` | Entrenamiento | Tasa a la que se actualizan los pesos durante la optimización. | LR demasiado alto → divergencia; demasiado bajo → convergencia lenta o atrapada en mínimos locales. | 0.00001 |
+| `batch_size` | Entrenamiento | Nº de muestras procesadas antes de un paso de optimización. | Batches grandes estabilizan el gradiente pero requieren más memoria; tamaños pequeños introducen ruido útil para la generalización. | 16 |
+| `epochs` | Entrenamiento | Pasadas completas por el set de entrenamiento. | Pocas épocas pueden sub-ajustar; demasiadas pueden sobre-ajustar si no hay regularización. | 20 |
+| `optimizer` (`AdamW`) | Entrenamiento | Algoritmo que actualiza los pesos combinando momentum con adaptación por dimensión y decaimiento de peso. | Maneja bien curvas de error ruidosas; el término `weight_decay` regulariza al penalizar grandes pesos. | AdamW |
+| `scheduler_step_size` | Entrenamiento | Nº de épocas antes de aplicar decay al learning rate. | Controla cuán frecuentemente se reduce la LR; pasos cortos aceleran la reducción, potencialmente mejorando convergencia. | 6 |
+| `scheduler_gamma` | Entrenamiento | Factor multiplicativo aplicado a la LR cuando el scheduler se activa. | Valores <1 reducen la LR; gamma muy bajo puede congelar el entrenamiento prematuramente. | 0.7 |
+| `augmentation` | Pre-procesamiento | Conjunto y probabilidad de transformaciones aleatorias aplicadas a las imágenes. | Incrementa la diversidad del set de entrenamiento y reduce sobreajuste. | True |
+| `StandardScaler` | Pre-procesamiento | Normaliza la variable `age` a media 0 y varianza 1. | Facilita el entrenamiento de la red adicional evitando que rangos distintos dominen el aprendizaje. | True |
+| `LabelEncoder` | Pre-procesamiento | Convierte categorías (`sex`, `localization`, `dx`) en enteros. | Permite que los datos categóricos se integren en redes neuronales y métricas de evaluación. | True |
+| `StepLR` | Scheduler | Reduce la LR de forma escalonada cada `step_size` épocas. | Permite grandes pasos al inicio y finos ajustes al final, mejorando la fine-tuning. | True |
+| `CrossEntropyLoss` | Función de pérdida | Mide la discrepancia entre la distribución predicha y la verdadera. | Adecuada para clasificación multiclase; minimiza log-pérdida, equivalente a maximizar la probabilidad. | True |
 
 ---
 
