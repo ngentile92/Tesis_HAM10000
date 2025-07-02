@@ -141,12 +141,7 @@ El modelo entrenado puede alcanzar una precisión superior al 85% en el conjunto
 
 ## Cita del Dataset
 
-Si utiliza este trabajo o el dataset HAM10000, por favor cite lo siguiente:
-
 ```
 Tschandl, P., Rosendahl, C. & Kittler, H. The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions. Sci. Data 5, 180161 (2018). https://doi.org/10.1038/sdata.2018.161
 ```
 
-## Licencia
-
-Este proyecto está disponible bajo la licencia MIT.
